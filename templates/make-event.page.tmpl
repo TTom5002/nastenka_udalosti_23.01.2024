@@ -1,0 +1,39 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+{{$event := index .Data "event"}}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Nová událost</h1>
+
+            <form method="post" action="/dashboard/cu/posts/make-event" class="" novalidate>
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+                <div class="form-group mt-3">
+                    <label for="header">Nadpis příspěvku:</label>
+                    {{with .Form.Errors.Get "header"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input class="form-control {{with .Form.Errors.Get " header"}} is-invalid {{end}}" id="header"
+                        autocomplete="off" type='text' name='header' value="{{$event.Header}}" required>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="body">Text:</label>
+                    {{with .Form.Errors.Get "body"}}
+                    <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input class="form-control {{with .Form.Errors.Get " body"}} is-invalid {{end}}" id="body"
+                        autocomplete="off" type='text' name='body' value="{{$event.Body}}" required>
+                </div>
+
+                <hr>
+                <input type="submit" class="btn btn-primary" value="Vytvoř událost">
+
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
