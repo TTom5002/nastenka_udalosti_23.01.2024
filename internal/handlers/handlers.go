@@ -265,7 +265,6 @@ func (m *Repository) PostSignup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Do database nahraj data
 	err = m.DB.SignUpUser(user)
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "Registrace se nepovedla")
