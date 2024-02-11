@@ -1,6 +1,8 @@
 package models
 
-import "nastenka_udalosti/internal/forms"
+import (
+	"nastenka_udalosti/internal/forms"
+)
 
 // TemplateData holds data sent from handlers to templates
 type TemplateData struct {
@@ -15,4 +17,5 @@ type TemplateData struct {
 	Form      *forms.Form
 	//TODO: Nebude access_level lepší?
 	IsAuthenticated int
+	User            User
 }

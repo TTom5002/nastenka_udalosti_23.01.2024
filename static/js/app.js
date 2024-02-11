@@ -64,7 +64,7 @@ function Prompt() {
             showConfirmButton = true,
         } = c;
 
-        const {value: result} = await Swal.fire({
+        const { value: result } = await Swal.fire({
             icon: icon,
             title: title,
             html: msg,
@@ -106,3 +106,8 @@ function Prompt() {
         custom: custom,
     }
 }
+
+document.getElementById("go-back").addEventListener("click", () => {
+    history.back();
+});
+

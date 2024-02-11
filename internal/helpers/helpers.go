@@ -31,6 +31,10 @@ func ServerError(w http.ResponseWriter, err error) {
 
 // IsAuthenticated ověří, že uživatel je příhlášen
 func IsAuthenticated(r *http.Request) (bool, error) {
+	if !app.Session.Exists(r.Context(), "userInfo") {
+		return false, nil
+	}
+
 	userInfo, ok := app.Session.Get(r.Context(), "userInfo").(models.User)
 	if !ok {
 		return false, errors.New("nepodařilo se přetypovat hodnotu na User")

@@ -63,6 +63,22 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["events"] = events
 
+	// isAuth, err := helpers.IsAuthenticated(r)
+	// if err != nil {
+	// 	helpers.ServerError(w, err)
+	// 	fmt.Print(2)
+	// 	return
+	// }
+	// if isAuth {
+	// 	userInfo, err := helpers.GetUserInfo(r)
+	// 	if err != nil {
+	// 		helpers.ServerError(w, err)
+	// 		fmt.Print(3)
+	// 		return
+	// 	}
+	// 	data["userInfo"] = userInfo
+	// }
+
 	render.Template(w, r, "home.page.tmpl", &models.TemplateData{
 		Data: data,
 	})

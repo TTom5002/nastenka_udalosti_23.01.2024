@@ -82,6 +82,7 @@ func run() (*driver.DB, error) {
 	}
 
 	app.TemplateCache = tc
+	//TODO: TADY PAK NA TRUE
 	app.UseCache = false
 
 	repo := handlers.NewRepo(&app, db)

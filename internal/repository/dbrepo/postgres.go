@@ -21,7 +21,7 @@ func (m *postgresDBRepo) ShowEvents() ([]models.Event, error) {
 	// TODO: Kde je limit, tak budeš moct přidávat více příspěvků na stránku a offset jakou stránku
 	query := `
 		select e.event_id, e.event_header, e.event_body, e.event_created_at, e.event_updated_at,
-		u.user_id, u.user_lastname
+		u.user_id, u.user_firstname, u.user_lastname
 		from events e
 		left join users u on (e.event_author_id = u.user_id)
 		order by e.event_created_at desc
@@ -43,6 +43,7 @@ func (m *postgresDBRepo) ShowEvents() ([]models.Event, error) {
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.User.ID,
+			&i.User.FirstName,
 			&i.User.LastName,
 		)
 
@@ -307,7 +308,6 @@ func (m *postgresDBRepo) ShowUnverifiedUsers() ([]models.User, error) {
 
 	var users []models.User
 
-	// TODO: Kde je limit, tak budeš moct přidávat více příspěvků na stránku a offset jakou stránku
 	query := `
 		select user_id, user_firstname, user_lastname, user_email, user_updated_at
 		from users
