@@ -48,7 +48,7 @@ func run() (*driver.DB, error) {
 	// TODO: Co budu vkládat do relace
 	gob.Register(models.Event{})
 	gob.Register(models.User{})
-	gob.Register(map[string]int{})
+	// gob.Register(map[string]int{})
 
 	// TODO: Změň na true až půjde do produkce
 	app.InProduction = false

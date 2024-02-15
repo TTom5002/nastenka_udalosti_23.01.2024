@@ -2,8 +2,6 @@ package models
 
 import "time"
 
-// TODO: Dodělej modely tabulek databáze
-
 type User struct {
 	ID          int
 	FirstName   string

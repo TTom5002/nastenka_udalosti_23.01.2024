@@ -63,22 +63,6 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["events"] = events
 
-	// isAuth, err := helpers.IsAuthenticated(r)
-	// if err != nil {
-	// 	helpers.ServerError(w, err)
-	// 	fmt.Print(2)
-	// 	return
-	// }
-	// if isAuth {
-	// 	userInfo, err := helpers.GetUserInfo(r)
-	// 	if err != nil {
-	// 		helpers.ServerError(w, err)
-	// 		fmt.Print(3)
-	// 		return
-	// 	}
-	// 	data["userInfo"] = userInfo
-	// }
-
 	render.Template(w, r, "home.page.tmpl", &models.TemplateData{
 		Data: data,
 	})
@@ -374,6 +358,7 @@ func (m *Repository) PostUpdateEvent(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 	event_id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
+		helpers.ServerError(w, err)
 		return
 	}
 
@@ -385,16 +370,21 @@ func (m *Repository) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 
 	userInfo, err := helpers.GetUserInfo(r)
 	if err != nil {
+		helpers.ServerError(w, err)
 		return
 	}
-	if userInfo.ID != event.AuthorID {
-		m.App.Session.Put(r.Context(), "error", "Nejste autorem tohodle příspěvku")
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
+
+	if userInfo.AccessLevel != 3 {
+		if userInfo.ID != event.AuthorID {
+			m.App.Session.Put(r.Context(), "error", "Nejste autorem tohodle příspěvku")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
 	}
 
 	err = m.DB.DeleteEventByID(event_id)
 	if err != nil {
+		helpers.ServerError(w, err)
 		return
 	}
 
