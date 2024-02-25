@@ -4,37 +4,36 @@
 Nástěnka událostí
 {{end}}
 {{define "content"}}
-<p>Zkouška</p>
 
 <div class="col-md-12">
     {{$users := index .Data "users"}}
 
-        <table class="table table-striped table-hover" id="all-res">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Jméno</th>
-                    <th>Příjmení</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{range $users}}
-                <tr>
-                    <td>
-                         <!-- TODO: Dodělej uživatele -->
-                        <a href="/dashboard/cu/profile">
-                            {{.ID}}
-                        </a>
-                        
-                    </td>
-                    <td>{{.FirstName}}</td>
-                    <td>{{.LastName}}</td>
-                    <td>{{.Email}}</td>
-                </tr>
-                {{end}}
-            </tbody>
-        </table>
+    <table class="table table-striped table-hover" id="all-res">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Jméno</th>
+                <th>Příjmení</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range $users}}
+            <tr>
+                <td>
+                    <!-- TODO: Dodělej uživatele -->
+                    <a href="/dashboard/cu/profile/{{.ID}}">
+                        {{.ID}}
+                    </a>
+
+                </td>
+                <td>{{.FirstName}}</td>
+                <td>{{.LastName}}</td>
+                <td>{{.Email}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
 
 </div>
 {{end}}

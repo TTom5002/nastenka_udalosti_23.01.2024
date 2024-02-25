@@ -1,5 +1,5 @@
 {{define "base"}}
-<!DOCTYPE html>
+
 <html lang="cs">
 
 <head>
@@ -19,16 +19,17 @@
     </title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     {{$userInfo := index .User}}
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid mx-5">
+        <div class="container-fluid mx-3">
             <a class="navbar-brand" href="/">Nástěnka událostí</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ms-auto mx-5">
                     {{if eq .IsAuthenticated 0}}
@@ -39,19 +40,22 @@
                         <a class="nav-link" href="/user/signup">Registrace</a>
                     </li>
                     {{else}}
-                    <li class="nav-item dropdown ">
+
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             {{$userInfo.FirstName}} {{$userInfo.LastName}}
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
 
                             {{if eq $userInfo.Verified true}}
-                            <li><a class="dropdown-item" href="/dashboard/cu/profile">Profil</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/cu/profile/{{$userInfo.ID}}">Profil</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/dashboard/cu/posts/make-event">Vytvořit událost</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/cu/posts/make-event">Vytvořit událost</a>
+                            </li>
                             <li><a class="dropdown-item" href="/dashboard/cu/posts/my-events">Moje události</a></li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -59,15 +63,18 @@
                             {{if eq $userInfo.AccessLevel 3}}
                             <li><a class="dropdown-item" href="/dashboard/admin/unverified-users">Neověření
                                     uživatelé</a></li>
-                            <li><a class="dropdown-item" href="/dashboard/admin/posts/all-events">Všechny události</a>
+                            <li><a class="dropdown-item" href="/dashboard/admin/posts/all-events">Všechny
+                                    události</a>
                             </li>
-                            <li><a class="dropdown-item" href="/dashboard/admin/all-users">Všichni uživatelé</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/admin/all-users">Všichni uživatelé</a>
+                            </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             {{end}}
                             {{else}}
-                            <li class="dropdown-item">Váš účet ještě není ověřen</li>
+                            <li class="dropdown-item">Váš účet
+                                ještě není ověřen</li>
                             {{end}}
 
                             <li><a class="dropdown-item" href="/user/logout">Odhlášení</a></li>
@@ -79,18 +86,25 @@
         </div>
     </nav>
 
+
     {{block "content" .}}
 
     {{end}}
 
-    <footer class="bg-body-tertiary fixed-bottom text-center">
 
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.45);">
-            Nástěnka událostí
+    <footer class="mt-auto" style="background-color: rgb(143, 143, 143);">
+
+        <div class="container">
+            <div class="text-center p-3">
+                Nástěnka událostí
+            </div>
         </div>
 
     </footer>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
@@ -111,9 +125,7 @@
 
 
     <script>
-        // document.getElementById("go-back").addEventListener("click", () => {
-        //     history.back();
-        // });
+
 
         let attention = Prompt();
 
@@ -152,17 +164,17 @@
             })
         }
 
-        {{with .Error}}
+        { { with .Error} }
         notify("{{.}}", "error");
-        {{end}}
+        { { end } }
 
-        {{with .Flash}}
+        { { with .Flash} }
         notify("{{.}}", "success");
-        {{end}}
+        { { end } }
 
-        {{with .Warning}}
+        { { with .Warning} }
         notify("{{.}}", "warning");
-        {{end}}
+        { { end } }
 
     </script>
 </body>

@@ -410,9 +410,27 @@ func (m *Repository) ShowAllUnverifiedUsers(w http.ResponseWriter, r *http.Reque
 
 // EditProfile ukáže příspěvek k upravění
 func (m *Repository) EditProfile(w http.ResponseWriter, r *http.Request) {
+	profileID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		return
+	}
+
 	userInfo, err := helpers.GetUserInfo(r)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
+	}
+
+	if userInfo.AccessLevel != 3 {
+		if userInfo.ID != profileID {
+			m.App.Session.Put(r.Context(), "error", "Nemáte oprávnění")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+	}
+
+	userInfo, err = m.DB.GetUserByID(profileID)
+	if err != nil {
 		return
 	}
 
@@ -433,6 +451,7 @@ func (m *Repository) PostEditProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO TADY TO JE
 	userInfo, err := helpers.GetUserInfo(r)
 	if err != nil {
 		helpers.ServerError(w, err)

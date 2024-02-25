@@ -457,3 +457,28 @@ func (m *postgresDBRepo) ShowAllUsers() ([]models.User, error) {
 
 	return users, nil
 }
+
+func (m *postgresDBRepo) GetUserByID(ID int) (models.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `
+		select user_firstname, user_lastname, user_email
+		from users
+		where user_id = $1
+	`
+
+	var user models.User
+	row := m.DB.QueryRowContext(ctx, query, ID)
+	err := row.Scan(
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+	)
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

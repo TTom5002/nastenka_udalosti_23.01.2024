@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col">
             <h1>Nová událost</h1>
-            <button id="go-back">Go back!</button>
+            <button id="go-back" onclick="goback()">Zpět</button>
 
             <form method="post" action="/dashboard/cu/posts/make-event" class="" novalidate>
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">

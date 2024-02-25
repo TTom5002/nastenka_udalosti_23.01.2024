@@ -17,4 +17,5 @@ type DatabaseRepo interface {
 	DeleteUserByID(userID int) error
 	VerUserByID(userID int) error
 	ShowAllUsers() ([]models.User, error)
+	GetUserByID(ID int) (models.User, error)
 }

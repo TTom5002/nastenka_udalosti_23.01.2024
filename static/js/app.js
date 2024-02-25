@@ -1,3 +1,9 @@
+function Goback() {
+    document.getElementById("go-back").addEventListener("click", () => {
+        history.back();
+    });
+}
+
 function Prompt() {
     let toast = function (c) {
         const {

@@ -45,8 +45,8 @@ func routes(app *config.AppConfig) http.Handler {
 			})
 
 			mux.Route("/profile", func(mux chi.Router) {
-				mux.Get("/", handlers.Repo.EditProfile)
-				mux.Post("/", handlers.Repo.PostEditProfile)
+				mux.Get("/{id}", handlers.Repo.EditProfile)
+				mux.Post("/{id}", handlers.Repo.PostEditProfile)
 				mux.Get("/delete/{id}", handlers.Repo.DeleteProfile)
 			})
 		})
