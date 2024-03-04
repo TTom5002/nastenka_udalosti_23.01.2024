@@ -106,7 +106,11 @@ func (m *Repository) PostMakeEvent(w http.ResponseWriter, r *http.Request) {
 
 	form.Required("header", "body")
 	// TODO: Délka nemusí být ale možná se bude hodit
-	// form.MinLength("header", 3)
+	form.MinLength("header", 3)
+	form.MaxLength("header", 100)
+
+	form.MinLength("body", 10)
+	form.MinLength("body", 2000)
 
 	if !form.Valid() {
 		data := make(map[string]interface{})

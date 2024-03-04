@@ -60,9 +60,6 @@ func routes(app *config.AppConfig) http.Handler {
 			mux.Route("/posts", func(mux chi.Router) {
 				mux.Get("/all-events", handlers.Repo.AdminShowAllEvents)
 
-				// mux.Get("/", handlers.Repo.ViewProfile)
-				// mux.Post("/edit", handlers.Repo.EditProfile)
-				// Další akce s profilem
 			})
 
 		})

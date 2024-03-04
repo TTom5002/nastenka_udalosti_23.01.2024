@@ -50,7 +50,16 @@ func (f *Form) Has(field string) bool {
 func (f *Form) MinLength(field string, lenght int) bool {
 	x := f.Get(field)
 	if len(x) < lenght {
-		f.Errors.Add(field, fmt.Sprintf("This field must be at least %d characters long", lenght))
+		f.Errors.Add(field, fmt.Sprintf("Tohle pohle musí mít alespoň %d znaků", lenght))
+		return false
+	}
+	return true
+}
+
+func (f *Form) MaxLength(field string, lenght int) bool {
+	x := f.Get(field)
+	if len(x) > lenght {
+		f.Errors.Add(field, fmt.Sprintf("Tohle pole může mít nejvýše %d znaků", lenght))
 		return false
 	}
 	return true
