@@ -110,7 +110,7 @@ func (m *Repository) PostMakeEvent(w http.ResponseWriter, r *http.Request) {
 	form.MaxLength("header", 100)
 
 	form.MinLength("body", 10)
-	form.MinLength("body", 2000)
+	form.MaxLength("body", 2000)
 
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -297,7 +297,7 @@ func (m *Repository) EditEvent(w http.ResponseWriter, r *http.Request) {
 
 	userInfo, _ := helpers.GetUserInfo(r)
 
-	if userInfo.AccessLevel != 3 {
+	if (userInfo.AccessLevel != 3) && (userInfo.AccessLevel != 2) {
 		if userInfo.ID != event.AuthorID {
 			m.App.Session.Put(r.Context(), "error", "Nejste autorem tohodle příspěvku")
 			http.Redirect(w, r, "/dashboard/cu/posts/my-events", http.StatusSeeOther)
@@ -355,7 +355,7 @@ func (m *Repository) PostUpdateEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.App.Session.Put(r.Context(), "flash", "Příspěvek se upravil")
-	http.Redirect(w, r, "/dashboard/cu/posts/my-events", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // DeleteEvent zmaže událost
@@ -378,7 +378,7 @@ func (m *Repository) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if userInfo.AccessLevel != 3 {
+	if (userInfo.AccessLevel != 3) && (userInfo.AccessLevel != 2) {
 		if userInfo.ID != event.AuthorID {
 			m.App.Session.Put(r.Context(), "error", "Nejste autorem tohodle příspěvku")
 			http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -393,7 +393,7 @@ func (m *Repository) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.App.Session.Put(r.Context(), "flash", "Událost byla smazána")
-	http.Redirect(w, r, "/dashboard/cu/posts/my-events", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // ShowAllUnverifiedUsers ukáže všechny neověřené uživatele
