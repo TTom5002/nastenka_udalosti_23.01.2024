@@ -69,6 +69,20 @@ func GetAdminAccessLevel(r *http.Request) (bool, error) {
 	return true, nil
 }
 
+// GetAdminAccessLevel ověří platnost admina (user_access_level = 3)
+func GetTeacherAccessLevel(r *http.Request) (bool, error) {
+	userInfo, ok := app.Session.Get(r.Context(), "userInfo").(models.User)
+	if !ok {
+		return false, errors.New("nepodařilo se přetypovat hodnotu na User")
+	}
+	accessLevel := userInfo.AccessLevel
+
+	if (accessLevel != 3) && (accessLevel != 2) {
+		return false, errors.New("nepovedlo se ověřit uživatele")
+	}
+	return true, nil
+}
+
 // GetUserInfo získá potřebné informace od uživatele
 func GetUserInfo(r *http.Request) (models.User, error) {
 	userInfo, ok := app.Session.Get(r.Context(), "userInfo").(models.User)

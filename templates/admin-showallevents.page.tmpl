@@ -4,36 +4,40 @@
 Nástěnka událostí
 {{end}}
 {{define "content"}}
+{{$events := index .Data "events"}}
+<main role="main" class="container">
+    <div class="container table-responsive" style="margin: 2em 0 2em 0;">
+        <h1>Všechny události</h1>
 
-<div class="col-md-12">
-    {{$events := index .Data "events"}}
+        <table class="table table-striped table-hover table-bordered" id="all-res">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 50%;">Nadpis</th>
 
-    <table class="table table-striped table-hover" id="all-res">
-        <thead>
-            <tr>
-                <th>Nadpis</th>
-                <th>Tělo</th>
-                <th>Vytvořeno</th>
-                <th>Upraveno</th>
-                <th>Příjmení</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range $events}}
-            <tr>
-                <td>
-                    <a href="/dashboard/cu/posts/show-event/{{.ID}}">
-                        {{.Header}}
-                    </a>
+                    <th class="text-center" style="width: 10%;">Vytvořeno</th>
+                    <th class="text-center" style="width: 10%;">Upraveno</th>
+                    <th class="text-center" style="width: 30%;">Vytvořil</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {{range $events}}
+                <tr>
+                    <td class="text-center">
+                        <a href="/dashboard/posts/show-event/{{.ID}}">
+                            {{truncateString .Header 75}}
+                        </a>
 
-                </td>
-                <td>{{.Body}}</td>
-                <td>{{humanDate .CreatedAt}}</td>
-                <td>{{humanDate .UpdatedAt}}</td>
-                <td>{{.User.LastName}}</td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
-</div>
+                    </td>
+
+                    <td class="text-center">{{humanDate .CreatedAt}}</td>
+                    <td class="text-center">{{humanDate .UpdatedAt}}</td>
+                    <td class="text-center">{{.User.FirstName}} {{.User.LastName}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+</main>
 {{end}}

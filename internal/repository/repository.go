@@ -6,7 +6,7 @@ import "nastenka_udalosti/internal/models"
 type DatabaseRepo interface {
 	InsertEvent(event models.Event) error
 	Authenticate(email, testPassword string) (models.User, error)
-	ShowEvents() ([]models.Event, error)
+	ShowEvents(limit int, offset int) ([]models.Event, error)
 	GetEventByID(event_id int) (models.Event, error)
 	ShowUserEvents(id int) ([]models.Event, error)
 	SignUpUser(user models.User) error

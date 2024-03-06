@@ -51,11 +51,24 @@ func Verified(next http.Handler) http.Handler {
 	})
 }
 
-// Verified ověří, jestli uživatel je má dostatečná práva Admin (access_level = 3)
+// Verified ověří, jestli uživatel má dostatečná práva Admin (access_level = 3)
 func Admin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		adminAccessLevel, _ := helpers.GetAdminAccessLevel(r)
 		if !adminAccessLevel {
+			session.Put(r.Context(), "error", "Nemáte dostatečná práva")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+// Verified ověří, jestli uživatel má dostatečná práva Učitel (access_level = 3 nebo 2)
+func Teacher(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		teacherAccessLevel, _ := helpers.GetTeacherAccessLevel(r)
+		if !teacherAccessLevel {
 			session.Put(r.Context(), "error", "Nemáte dostatečná práva")
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return

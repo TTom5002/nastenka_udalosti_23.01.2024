@@ -32,34 +32,35 @@ func routes(app *config.AppConfig) http.Handler {
 		mux.Use(Auth)
 		mux.Use(Verified)
 
-		mux.Route("/cu", func(mux chi.Router) {
-			mux.Route("/posts", func(mux chi.Router) {
+		mux.Route("/posts", func(mux chi.Router) {
 
-				mux.Get("/make-event", handlers.Repo.MakeEvent)
-				mux.Post("/make-event", handlers.Repo.PostMakeEvent)
-				mux.Get("/my-events", handlers.Repo.MyEvents)
+			mux.Get("/make-event", handlers.Repo.MakeEvent)
+			mux.Post("/make-event", handlers.Repo.PostMakeEvent)
+			mux.Get("/my-events", handlers.Repo.MyEvents)
 
-				mux.Get("/show-event/{id}", handlers.Repo.EditEvent)
-				mux.Post("/show-event/{id}", handlers.Repo.PostUpdateEvent)
-				mux.Get("/delete-event/{id}", handlers.Repo.DeleteEvent)
-			})
-
-			mux.Route("/profile", func(mux chi.Router) {
-				mux.Get("/{id}", handlers.Repo.EditProfile)
-				mux.Post("/{id}", handlers.Repo.PostEditProfile)
-				mux.Get("/delete/{id}", handlers.Repo.DeleteProfile)
-			})
+			mux.Get("/show-event/{id}", handlers.Repo.EditEvent)
+			mux.Post("/show-event/{id}", handlers.Repo.PostUpdateEvent)
+			mux.Get("/delete-event/{id}", handlers.Repo.DeleteEvent)
 		})
 
-		mux.Route("/admin", func(mux chi.Router) {
-			mux.Use(Admin)
-			mux.Get("/", handlers.Repo.Home)
-			mux.Get("/unverified-users", handlers.Repo.ShowAllUnverifiedUsers)
-			mux.Post("/unverified-users", handlers.Repo.PostVerUsers)
-			mux.Get("/all-users", handlers.Repo.AdminAllUsers)
+		mux.Route("/profile", func(mux chi.Router) {
+			mux.Get("/{id}", handlers.Repo.EditProfile)
+			mux.Post("/{id}", handlers.Repo.PostEditProfile)
+			mux.Get("/delete/{id}", handlers.Repo.DeleteProfile)
+		})
+
+		mux.Route("/management", func(mux chi.Router) {
+			mux.Use(Teacher)
+
 			mux.Route("/posts", func(mux chi.Router) {
 				mux.Get("/all-events", handlers.Repo.AdminShowAllEvents)
+			})
 
+			mux.Route("/admin", func(mux chi.Router) {
+				mux.Use(Admin)
+				mux.Get("/unverified-users", handlers.Repo.ShowAllUnverifiedUsers)
+				mux.Post("/unverified-users", handlers.Repo.PostVerUsers)
+				mux.Get("/all-users", handlers.Repo.AdminAllUsers)
 			})
 
 		})

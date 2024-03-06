@@ -5,34 +5,39 @@ Nástěnka událostí
 {{end}}
 {{define "content"}}
 
-<div class="col-md-12">
-    {{$events := index .Data "events"}}
-    <table class="table table-striped table-hover" id="all-res">
-        <thead>
-            <tr>
-                <th>Nadpis</th>
-                <th>Tělo</th>
-                <th>Vytvořeno</th>
-                <th>Upraveno</th>
-                <th>Příjmení</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range $events}}
-            <tr>
-                <td>
-                    <a href="/dashboard/cu/posts/show-event/{{.ID}}">
-                        {{.Header}}
-                    </a>
+{{$events := index .Data "events"}}
+<main role="main" class="container">
+    <div class="container table-responsive" style="margin: 2em 0 2em 0;">
+        <h1>Moje události</h1>
+        <table class="table table-striped table-hover table-bordered" id="all-res">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 50%;">Nadpis</th>
+                    <th style="width: 30%;">Text</th>
+                    <th style="width: 10%;">Vytvořeno</th>
+                    <th style="width: 10%;">Upraveno</th>
 
-                </td>
-                <td>{{.Body}}</td>
-                <td>{{humanDate .CreatedAt}}</td>
-                <td>{{humanDate .UpdatedAt}}</td>
-                <td>{{.User.LastName}}</td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
-</div>
+                </tr>
+            </thead>
+            <tbody>
+                {{range $events}}
+                <tr>
+                    <td class="text-center" style="width: 50%;">
+                        <a href="/dashboard/posts/show-event/{{.ID}}">
+                            {{truncateString .Header 75}}
+                        </a>
+
+                    </td>
+                    <td class="text-wrap" style="width: 30%;">
+                        {{truncateString .Body 35}}
+                    </td>
+                    <td style="width: 10%;">{{humanDate .CreatedAt}}</td>
+                    <td style="width: 10%;">{{humanDate .UpdatedAt}}</td>
+
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+</main>
 {{end}}

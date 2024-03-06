@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"nastenka_udalosti/internal/config"
 	"nastenka_udalosti/internal/driver"
@@ -54,7 +53,33 @@ func NewHandlers(r *Repository) {
 
 // Home načte úvodní obrazovku a zobrazí příspěvky
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	events, err := m.DB.ShowEvents()
+	var limit, offset int
+	var err error
+
+	queryParams := r.URL.Query()
+
+	// limitStr := queryParams.Get("limit")
+	// if limitStr == "" {
+	// 	limit = 25 // Výchozí hodnota pro 'limit'
+	// } else {
+	// 	limit, err = strconv.Atoi(limitStr)
+	// 	if err != nil {
+	// 		limit = 25
+	// 	}
+	// }
+	limit = 15
+	offsetStr := queryParams.Get("page")
+	if offsetStr == "" {
+		offset = 0 // Výchozí hodnota pro 'offset', pokud není v URL specifikována
+	} else {
+		offset, err = strconv.Atoi(offsetStr)
+		if err != nil {
+			// V případě chyby při konverzi nastavíme offset na 0
+			offset = 0
+		}
+	}
+
+	events, err := m.DB.ShowEvents(limit, offset)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -105,12 +130,11 @@ func (m *Repository) PostMakeEvent(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 
 	form.Required("header", "body")
-	// TODO: Délka nemusí být ale možná se bude hodit
 	form.MinLength("header", 3)
-	form.MaxLength("header", 100)
+	form.MaxLength("header", 200)
 
 	form.MinLength("body", 10)
-	form.MaxLength("body", 2000)
+	form.MaxLength("body", 1000)
 
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -282,8 +306,7 @@ func (m *Repository) PostSignup(w http.ResponseWriter, r *http.Request) {
 
 // EditEvent zobrazí příspěvek na upravení
 func (m *Repository) EditEvent(w http.ResponseWriter, r *http.Request) {
-	exploded := strings.Split(r.RequestURI, "/")
-	event_id, err := strconv.Atoi(exploded[5])
+	event_id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -300,7 +323,7 @@ func (m *Repository) EditEvent(w http.ResponseWriter, r *http.Request) {
 	if (userInfo.AccessLevel != 3) && (userInfo.AccessLevel != 2) {
 		if userInfo.ID != event.AuthorID {
 			m.App.Session.Put(r.Context(), "error", "Nejste autorem tohodle příspěvku")
-			http.Redirect(w, r, "/dashboard/cu/posts/my-events", http.StatusSeeOther)
+			http.Redirect(w, r, "/dashboard/posts/my-events", http.StatusSeeOther)
 		}
 	}
 
@@ -322,8 +345,7 @@ func (m *Repository) PostUpdateEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	exploded := strings.Split(r.RequestURI, "/")
-	id, err := strconv.Atoi(exploded[5])
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -340,6 +362,11 @@ func (m *Repository) PostUpdateEvent(w http.ResponseWriter, r *http.Request) {
 
 	form := forms.New(r.PostForm)
 	form.Required("header", "body")
+	form.MinLength("header", 3)
+	form.MaxLength("header", 200)
+
+	form.MinLength("body", 10)
+	form.MaxLength("body", 1000)
 	if !form.Valid() {
 		render.Template(w, r, "show-event.page.tmpl", &models.TemplateData{
 			Data: data,
@@ -412,7 +439,7 @@ func (m *Repository) ShowAllUnverifiedUsers(w http.ResponseWriter, r *http.Reque
 	})
 }
 
-// EditProfile ukáže příspěvek k upravění
+// EditProfile ukáže profil k upravění
 func (m *Repository) EditProfile(w http.ResponseWriter, r *http.Request) {
 	profileID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -512,7 +539,7 @@ func (m *Repository) PostEditProfile(w http.ResponseWriter, r *http.Request) {
 
 	m.App.Session.Put(r.Context(), "userInfo", newUserInfo)
 	m.App.Session.Put(r.Context(), "flash", "Profil se upravil")
-	http.Redirect(w, r, "/dashboard/cu/profile", http.StatusSeeOther)
+	http.Redirect(w, r, "/dashboard/profile/"+chi.URLParam(r, "id"), http.StatusSeeOther)
 }
 
 // PostVerUsers pošle ověření uživatelů do databáze
@@ -523,31 +550,34 @@ func (m *Repository) PostVerUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for name := range r.PostForm {
-		if strings.HasPrefix(name, "to_ver") {
-			exploded := strings.Split(name, "_")
-			userID, _ := strconv.Atoi(exploded[2])
-			err := m.DB.VerUserByID(userID)
-			if err != nil {
-				log.Println(err)
-			}
-		} else if strings.HasPrefix(name, "to_dec") {
-			exploded := strings.Split(name, "_")
-			userID, _ := strconv.Atoi(exploded[2])
-			err := m.DB.DeleteUserByID(userID)
-			if err != nil {
-				log.Println(err)
+	for name, values := range r.PostForm {
+		if strings.HasPrefix(name, "action_") {
+			actionAndID := strings.Split(values[0], "_") // values[0] protože očekáváme pouze jednu hodnotu
+			action := actionAndID[0]
+			userID, _ := strconv.Atoi(actionAndID[1])
+
+			switch action {
+			case "ver":
+				err := m.DB.VerUserByID(userID)
+				if err != nil {
+					log.Println(err)
+				}
+			case "dec":
+				err := m.DB.DeleteUserByID(userID)
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		}
 	}
 
 	m.App.Session.Put(r.Context(), "flash", "Changes saved")
-	http.Redirect(w, r, "/dashboard/admin/unverified-users", http.StatusSeeOther)
+	http.Redirect(w, r, "/dashboard/management/admin/unverified-users", http.StatusSeeOther)
 }
 
 // AdminShowAllEvents ukáže adminovi všechny události uživatelů
 func (m *Repository) AdminShowAllEvents(w http.ResponseWriter, r *http.Request) {
-	events, err := m.DB.ShowEvents()
+	events, err := m.DB.ShowEvents(25, 0)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -566,7 +596,6 @@ func (m *Repository) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	fmt.Println(profileID)
 
 	userInfo, err := helpers.GetUserInfo(r)
 	if err != nil {
@@ -586,8 +615,10 @@ func (m *Repository) DeleteProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if userInfo.ID == profileID {
+		m.App.Session.Destroy(r.Context())
+	}
 	m.App.Session.Put(r.Context(), "flash", "Profil se úspěšně smazal")
-	m.App.Session.Destroy(r.Context())
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 

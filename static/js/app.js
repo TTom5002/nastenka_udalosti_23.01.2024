@@ -1,8 +1,37 @@
-function Goback() {
-    document.getElementById("go-back").addEventListener("click", () => {
-        history.back();
-    });
-}
+// function Goback() {
+//     document.getElementById("go-back").addEventListener("click", () => {
+//         const lastVisitedPage = sessionStorage.getItem("lastVisitedPage");
+//         if (lastVisitedPage) {
+//             window.location.href = lastVisitedPage;
+//             sessionStorage.removeItem("lastVisitedPage"); // Odstranění hodnoty po použití
+//         } else {
+//             history.back(); // Jako záložní plán, pokud URL nebyla uložena
+//         }
+//     });
+// }
+
+// function LoadMore() {
+//     let offset = 0; // Startovací bod pro načítání příspěvků
+//     const limit = 2; // Kolik příspěvků chcete načíst najednou
+
+//     document.getElementById('load-more').addEventListener('click', function () {
+//         offset += limit; // Zvyšte offset pro načtení dalších příspěvků
+//         fetch(`/?limit=${limit}&offset=${offset}`)
+//             .then(response => response.json())
+//             .then(data => {
+//                 // Předpokládáme, že 'data' je pole objektů 'event'
+//                 const container = document.getElementById('event-container');
+//                 data.forEach(event => {
+//                     const eventElement = document.createElement('div');
+//                     eventElement.className = 'event';
+//                     eventElement.innerHTML = `<h2>${event.Header}</h2><p>${event.Body}</p>`;
+//                     // Přidání dalších detailů eventu podle potřeby
+//                     container.appendChild(eventElement);
+//                 });
+//             })
+//             .catch(error => console.error('Chyba při načítání více příspěvků:', error));
+//     });
+// }
 
 function Prompt() {
     let toast = function (c) {
@@ -113,7 +142,7 @@ function Prompt() {
     }
 }
 
-document.getElementById("go-back").addEventListener("click", () => {
-    history.back();
-});
+// document.getElementById("go-back").addEventListener("click", () => {
+//     history.back();
+// });
 

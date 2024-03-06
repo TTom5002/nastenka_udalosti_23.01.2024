@@ -16,24 +16,13 @@ import (
 )
 
 var functions = template.FuncMap{
-	"humanDate":  HumanDate,
-	"formatDate": FormatDate,
-	// "iterate":    Iterate,
+	"humanDate":      HumanDate,
+	"formatDate":     FormatDate,
+	"truncateString": TruncateString,
 }
 
 var app *config.AppConfig
 var pathToTemplates = "./templates"
-
-// TODO: Pak možná odstraň
-// Iterate returns a slice of ints, starting at 1, going to count
-// func Iterate(count int) []int {
-// 	var i int
-// 	var items []int
-// 	for i = 0; i < count; i++ {
-// 		items = append(items, i)
-// 	}
-// 	return items
-// }
 
 // NewRenderer nastavá config pro template package
 func NewRenderer(a *config.AppConfig) {
@@ -43,6 +32,14 @@ func NewRenderer(a *config.AppConfig) {
 // HumanDate vrací datum v YYYY-MM-DD formatu
 func HumanDate(t time.Time) string {
 	return t.Format("2006-01-02")
+}
+
+// TruncateString nastaví max určitou délku stringu a potom ...
+func TruncateString(str string, num int) string {
+	if len(str) > num {
+		return str[:num] + "..."
+	}
+	return str
 }
 
 // FormatDate formátuje datum dle požadoveného stringu

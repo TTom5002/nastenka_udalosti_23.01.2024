@@ -3,38 +3,43 @@
 {{define "content"}}
 
 {{$event := index .Data "event"}}
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h1>Nová událost</h1>
-            <button id="go-back" onclick="goback()">Zpět</button>
+<main role="main" class="container">
+    <div class="container" style="margin: 6em 0 2em 0;">
+        <h1>Nová událost</h1>
+        <div class="row">
+            <div class="col">
 
-            <form method="post" action="/dashboard/cu/posts/make-event" class="" novalidate>
-                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <!-- <button id="go-back" onclick="goback()">Zpět</button> -->
 
-                <div class="form-group mt-3">
-                    <label for="header">Nadpis příspěvku:</label>
-                    {{with .Form.Errors.Get "header"}}
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <input class="form-control {{with .Form.Errors.Get " header"}} is-invalid {{end}}" id="header"
-                        autocomplete="off" type='text' name='header' value="{{$event.Header}}" required>
-                </div>
+                <form method="post" action="/dashboard/posts/make-event" class="" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
-                <div class="form-group mt-3">
-                    <label for="body">Text:</label>
-                    {{with .Form.Errors.Get "body"}}
-                    <label class="text-danger">{{.}}</label>
-                    {{end}}
-                    <input class="form-control {{with .Form.Errors.Get " body"}} is-invalid {{end}}" id="body"
-                        autocomplete="off" type='text' name='body' value="{{$event.Body}}" required>
-                </div>
+                    <div class="form-group mt-3">
+                        <label for="header">Nadpis příspěvku:</label>
+                        {{with .Form.Errors.Get "header"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <input class="form-control {{with .Form.Errors.Get " header"}} is-invalid {{end}}" id="header"
+                            autocomplete="off" type='text' name='header' value="{{$event.Header}}" required>
+                    </div>
 
-                <hr>
-                <input type="submit" class="btn btn-primary" value="Vytvoř událost">
+                    <div class="form-group mt-3">
+                        <label for="body">Text:</label>
+                        {{with .Form.Errors.Get "body"}}
+                        <label class="text-danger">{{.}}</label>
+                        {{end}}
+                        <!-- <input class="form-control {{with .Form.Errors.Get " body"}} is-invalid {{end}}" id="body"
+                            autocomplete="off" type='text' name='body' value="{{$event.Body}}" required> -->
+                        <textarea class="form-control {{with .Form.Errors.Get " body"}} is-invalid {{end}}" id="body"
+                            name="body" autocomplete="off" rows="5" required>{{$event.Body}}</textarea>
+                    </div>
 
-            </form>
+                    <hr>
+                    <input type="submit" class="btn btn-primary" value="Vytvoř událost">
+
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</main>
 {{end}}

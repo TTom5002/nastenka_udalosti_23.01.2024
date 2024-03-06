@@ -49,24 +49,28 @@
                         <ul class="dropdown-menu dropdown-menu-end">
 
                             {{if eq $userInfo.Verified true}}
-                            <li><a class="dropdown-item" href="/dashboard/cu/profile/{{$userInfo.ID}}">Profil</a>
+                            <li><a class="dropdown-item" href="/dashboard/profile/{{$userInfo.ID}}">Profil</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/dashboard/cu/posts/make-event">Vytvořit událost</a>
+                            <li><a class="dropdown-item" href="/dashboard/posts/make-event">Vytvořit událost</a>
                             </li>
-                            <li><a class="dropdown-item" href="/dashboard/cu/posts/my-events">Moje události</a></li>
+                            <li><a class="dropdown-item" href="/dashboard/posts/my-events">Moje události</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             {{if eq $userInfo.AccessLevel 3}}
-                            <li><a class="dropdown-item" href="/dashboard/admin/unverified-users">Neověření
+                            <li><a class="dropdown-item" href="/dashboard/management/admin/unverified-users">Neověření
                                     uživatelé</a></li>
-                            <li><a class="dropdown-item" href="/dashboard/admin/posts/all-events">Všechny
-                                    události</a>
+
+                            <li><a class="dropdown-item" href="/dashboard/management/admin/all-users">Všichni
+                                    uživatelé</a>
                             </li>
-                            <li><a class="dropdown-item" href="/dashboard/admin/all-users">Všichni uživatelé</a>
+                            {{end}}
+                            {{if gt $userInfo.AccessLevel 1}}
+                            <li><a class="dropdown-item" href="/dashboard/management/posts/all-events">Všechny
+                                    události</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
@@ -90,8 +94,6 @@
     {{block "content" .}}
 
     {{end}}
-
-
     <footer class="mt-auto" style="background-color: rgb(143, 143, 143);">
 
         <div class="container">
@@ -101,6 +103,7 @@
         </div>
 
     </footer>
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>

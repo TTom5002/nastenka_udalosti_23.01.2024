@@ -12,7 +12,7 @@ import (
 // TODO: Udělej všechny databázové dotazy
 
 // ShowEvents zobrazí určitý počet příspěvků
-func (m *postgresDBRepo) ShowEvents() ([]models.Event, error) {
+func (m *postgresDBRepo) ShowEvents(limit int, offset int) ([]models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -25,10 +25,10 @@ func (m *postgresDBRepo) ShowEvents() ([]models.Event, error) {
 		from events e
 		left join users u on (e.event_author_id = u.user_id)
 		order by e.event_created_at desc
-		LIMIT 25 offset 0
+		LIMIT $1 offset $2
 	`
 
-	rows, err := m.DB.QueryContext(ctx, query)
+	rows, err := m.DB.QueryContext(ctx, query, limit, offset)
 	if err != nil {
 		return events, err
 	}
@@ -463,7 +463,7 @@ func (m *postgresDBRepo) GetUserByID(ID int) (models.User, error) {
 	defer cancel()
 
 	query := `
-		select user_firstname, user_lastname, user_email
+		select user_id, user_firstname, user_lastname, user_email
 		from users
 		where user_id = $1
 	`
@@ -471,6 +471,7 @@ func (m *postgresDBRepo) GetUserByID(ID int) (models.User, error) {
 	var user models.User
 	row := m.DB.QueryRowContext(ctx, query, ID)
 	err := row.Scan(
+		&user.ID,
 		&user.FirstName,
 		&user.LastName,
 		&user.Email,

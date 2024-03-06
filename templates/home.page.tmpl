@@ -9,11 +9,10 @@ Nástěnka událostí
 {{$events := index .Data "events"}}
 
 <div class="container mt-3">
-    <div class="row row-cols-1 row-cols-md-3 g-3" data-masonry='{"percentPosition": true }'>
+    <div class="row row-cols-1 row-cols-md-3 g-3 " data-masonry='{"percentPosition": true }'>
 
 
         {{range $events}}
-
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card h-100">
                 <div class="card-body">
@@ -36,5 +35,61 @@ Nástěnka událostí
 
     </div>
 </div>
+<!-- <div class="footer-fixed-center">
+    <div class="d-flex justify-content-center">
+        <button id="load-more" class="btn btn-primary">Načíst více</button>
+    </div>
+</div> -->
+<div class="d-flex justify-content-center gap-5">
+    <button id="prev-page" class="btn btn-primary">Zpět</button>
+    <button id="next-page" class="btn btn-primary">Další</button>
+</div>
+{{end}}
+{{define "js"}}
+<script>
+    // document.getElementById('load-more').addEventListener('click', function () {
+    //     const currentUrl = new URL(window.location);
+    //     let limit = parseInt(currentUrl.searchParams.get("limit"), 10) || 25;
+
+    //     limit += 10; // Zvýší limit o 10
+
+    //     // Uložení hodnoty limit pro použití po načtení stránky
+    //     localStorage.setItem('scrollToLimit', limit.toString());
+
+    //     currentUrl.searchParams.set("limit", limit);
+    //     window.location.href = currentUrl.href;
+    // });
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     const scrollToLimit = localStorage.getItem('scrollToLimit');
+    //     if (scrollToLimit) {
+    //         const limit = parseInt(scrollToLimit, 10);
+    //         const posts = document.querySelectorAll('.col-12.col-md-6.col-lg-4');
+    //         if (posts.length > 0) {
+    //             const targetPostIndex = Math.max(0, posts.length - limit % 15); // Použijeme modulo, pokud limit není násobkem 15
+    //             posts[targetPostIndex].scrollIntoView({ behavior: 'smooth' });
+    //         }
+    //         localStorage.removeItem('scrollToLimit'); // Odebrání limitu z localStorage po použití
+    //     }
+    // });
+    document.addEventListener('DOMContentLoaded', function () {
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+        const url = new URL(window.location);
+        let currentPage = parseInt(url.searchParams.get('page'), 10) || 1;
+
+        prevPageBtn.addEventListener('click', function () {
+            if (currentPage > 1) {
+                url.searchParams.set('page', currentPage - 1);
+                window.location.href = url.href;
+            }
+        });
+
+        nextPageBtn.addEventListener('click', function () {
+            url.searchParams.set('page', currentPage + 1);
+            window.location.href = url.href;
+        });
+    });
+</script>
 
 {{end}}
