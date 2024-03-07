@@ -18,4 +18,5 @@ type DatabaseRepo interface {
 	VerUserByID(userID int) error
 	ShowAllUsers() ([]models.User, error)
 	GetUserByID(ID int) (models.User, error)
+	AssignRoleByID(userID, accessLevel int) error
 }

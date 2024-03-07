@@ -9,8 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// TODO: Udělej všechny databázové dotazy
-
 // ShowEvents zobrazí určitý počet příspěvků
 func (m *postgresDBRepo) ShowEvents(limit int, offset int) ([]models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -18,7 +16,6 @@ func (m *postgresDBRepo) ShowEvents(limit int, offset int) ([]models.Event, erro
 
 	var events []models.Event
 
-	// TODO: Kde je limit, tak budeš moct přidávat více příspěvků na stránku a offset jakou stránku
 	query := `
 		select e.event_id, e.event_header, e.event_body, e.event_created_at, e.event_updated_at,
 		u.user_id, u.user_firstname, u.user_lastname
@@ -424,7 +421,7 @@ func (m *postgresDBRepo) ShowAllUsers() ([]models.User, error) {
 	var users []models.User
 
 	query := `
-		select user_id, user_firstname, user_lastname, user_email, user_updated_at
+		select user_id, user_firstname, user_lastname, user_email, user_updated_at, user_access_level
 		from users
 		order by user_created_at desc
 	`
@@ -443,6 +440,7 @@ func (m *postgresDBRepo) ShowAllUsers() ([]models.User, error) {
 			&i.LastName,
 			&i.Email,
 			&i.UpdatedAt,
+			&i.AccessLevel,
 		)
 
 		if err != nil {
@@ -482,4 +480,17 @@ func (m *postgresDBRepo) GetUserByID(ID int) (models.User, error) {
 	}
 
 	return user, nil
+}
+
+func (m *postgresDBRepo) AssignRoleByID(userID, accessLevel int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE users SET user_access_level = $1 WHERE user_id = $2`
+
+	_, err := m.DB.ExecContext(ctx, query, accessLevel, userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

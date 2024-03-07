@@ -1,0 +1,17 @@
+---
+development:
+  dialect: postgres
+  # Nutno zadat jméno databáse
+  database: eventboarddb
+  # Nutno zadat jméno - (default - postgres)
+  user: postgres
+  # Nutno zadat heslo
+  password: tom
+  host: 127.0.0.1
+  pool: 5
+
+test:
+  url: {{envOr "TEST_DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/nastenka_udalosti_test?sslmode=disable"}}
+
+production:
+  url: {{envOr "DATABASE_URL" "postgres://postgres:postgres@127.0.0.1:5432/nastenka_udalosti_production?sslmode=disable"}}

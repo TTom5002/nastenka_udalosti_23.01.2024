@@ -61,6 +61,7 @@ func routes(app *config.AppConfig) http.Handler {
 				mux.Get("/unverified-users", handlers.Repo.ShowAllUnverifiedUsers)
 				mux.Post("/unverified-users", handlers.Repo.PostVerUsers)
 				mux.Get("/all-users", handlers.Repo.AdminAllUsers)
+				mux.Post("/all-users", handlers.Repo.PostUsersRole)
 			})
 
 		})

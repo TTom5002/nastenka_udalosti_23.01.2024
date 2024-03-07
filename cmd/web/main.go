@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/gob"
+	"flag"
 	"fmt"
 	"log"
 	"nastenka_udalosti/internal/config"
@@ -32,7 +33,7 @@ func main() {
 	}
 	defer db.SQL.Close()
 
-	fmt.Printf("Starting application on port %s", portNumber)
+	fmt.Printf("Zapínám aplikaci na portu %s", portNumber)
 	fmt.Println()
 
 	srv := &http.Server{
@@ -50,8 +51,28 @@ func run() (*driver.DB, error) {
 	gob.Register(models.User{})
 	// gob.Register(map[string]int{})
 
+	inProduction := flag.Bool("production", true, "Aplikace je v produkci")
+	useCache := flag.Bool("cache", true, "Použit template cache")
+	dbName := flag.String("dbname", "", "Název databáze")
+	dbHost := flag.String("dbhost", "localhost", "Host databáze")
+	dbUser := flag.String("dbuser", "", "Uživatel databáze")
+	dbPass := flag.String("dbpass", "", "Heslo databáze")
+	dbPort := flag.String("dbport", "", "Port databáze")
+	dbSSL := flag.String("dbssl", "disable", "SSL nastavení databáze (disable, prefer, require)")
+
+	flag.Parse()
+
+	// fmt.Printf("DB Name: %s\n", *dbName)
+	// fmt.Printf("DB User: %s\n", *dbUser)
+
+	if *dbName == "" || *dbUser == "" {
+		fmt.Println("Chybí požadovaný nastavení ")
+		os.Exit(1)
+	}
+
 	// TODO: Změň na true až půjde do produkce
-	app.InProduction = false
+	app.InProduction = *inProduction
+	app.UseCache = *useCache
 
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
@@ -68,22 +89,21 @@ func run() (*driver.DB, error) {
 	app.Session = session
 
 	// Přípojení k databázi
-	log.Println("Connecting to database...")
-	// TODO: Uprav název databáze
-	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=eventboarddb user=postgres password=tom")
+	log.Println("Připojuji se k databázi...")
+
+	connectionString := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", *dbHost, *dbPort, *dbName, *dbUser, *dbPass, *dbSSL)
+	db, err := driver.ConnectSQL(connectionString)
 	if err != nil {
-		log.Fatal("Cannot connect to database! Dying...")
+		log.Fatal("Nepodařilo se připojit k databázi! Končím...")
 	}
-	log.Println("Connected to database!")
+	log.Println("Připojeno k databázi!")
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
-		log.Fatal("cannot create template cache")
+		log.Fatal("nepodařilo se vytvořit template cache")
 		return nil, err
 	}
 
 	app.TemplateCache = tc
-	//TODO: TADY PAK NA TRUE
-	app.UseCache = false
 
 	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)

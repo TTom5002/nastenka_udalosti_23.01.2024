@@ -281,7 +281,6 @@ func (m *Repository) PostSignup(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: time.Now(),
 	}
 
-	// TODO: Dodělej aby se data při chybném poslání formuláře nemazaly
 	data := make(map[string]interface{})
 	data["usersignup"] = user
 
@@ -330,7 +329,6 @@ func (m *Repository) EditEvent(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["event"] = event
 
-	// FIXME
 	render.Template(w, r, "show-event.page.tmpl", &models.TemplateData{
 		Data: data,
 		Form: forms.New(nil),
@@ -482,7 +480,6 @@ func (m *Repository) PostEditProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO TADY TO JE
 	userInfo, err := helpers.GetUserInfo(r)
 	if err != nil {
 		helpers.ServerError(w, err)
@@ -552,7 +549,7 @@ func (m *Repository) PostVerUsers(w http.ResponseWriter, r *http.Request) {
 
 	for name, values := range r.PostForm {
 		if strings.HasPrefix(name, "action_") {
-			actionAndID := strings.Split(values[0], "_") // values[0] protože očekáváme pouze jednu hodnotu
+			actionAndID := strings.Split(values[0], "_")
 			action := actionAndID[0]
 			userID, _ := strconv.Atoi(actionAndID[1])
 
@@ -577,6 +574,7 @@ func (m *Repository) PostVerUsers(w http.ResponseWriter, r *http.Request) {
 
 // AdminShowAllEvents ukáže adminovi všechny události uživatelů
 func (m *Repository) AdminShowAllEvents(w http.ResponseWriter, r *http.Request) {
+	// TADY MOŽNÁ FIX
 	events, err := m.DB.ShowEvents(25, 0)
 	if err != nil {
 		helpers.ServerError(w, err)
@@ -635,4 +633,39 @@ func (m *Repository) AdminAllUsers(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "admin-showallusers.page.tmpl", &models.TemplateData{
 		Data: data,
 	})
+}
+
+func (m *Repository) PostUsersRole(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	// Iterace přes všechny klíče formuláře
+	for key, values := range r.Form {
+		if strings.HasPrefix(key, "accessLevel_") {
+			userIDStr := strings.TrimPrefix(key, "accessLevel_")
+			accessLevelStr := values[0]
+
+			userID, err := strconv.Atoi(userIDStr)
+			if err != nil {
+				log.Println("Neplatný ID:", err)
+			}
+
+			accessLevel, err := strconv.Atoi(accessLevelStr)
+			if err != nil {
+				log.Println("Neplatný access level:", err)
+			}
+
+			err = m.DB.AssignRoleByID(userID, accessLevel)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+		}
+	}
+
+	m.App.Session.Put(r.Context(), "flash", "Změny uloženy")
+	http.Redirect(w, r, "/dashboard/management/admin/all-users", http.StatusSeeOther)
 }
