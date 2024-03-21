@@ -67,7 +67,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	// 		limit = 25
 	// 	}
 	// }
-	limit = 15
+	limit = 25
 	offsetStr := queryParams.Get("page")
 	if offsetStr == "" {
 		offset = 0 // Výchozí hodnota pro 'offset', pokud není v URL specifikována
@@ -575,7 +575,7 @@ func (m *Repository) PostVerUsers(w http.ResponseWriter, r *http.Request) {
 // AdminShowAllEvents ukáže adminovi všechny události uživatelů
 func (m *Repository) AdminShowAllEvents(w http.ResponseWriter, r *http.Request) {
 	// TADY MOŽNÁ FIX
-	events, err := m.DB.ShowEvents(25, 0)
+	events, err := m.DB.ShowEvents(100000000, 0)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return

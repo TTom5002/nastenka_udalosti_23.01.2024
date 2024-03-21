@@ -1,10 +1,39 @@
-sql("INSERT INTO public.users (user_firstname,user_lastname,user_email,user_password,user_access_level,user_verified,user_created_at,user_updated_at) VALUES
-	 ('Tomáš','Tomšů','admin@admin.com','$2a$12$d0W50qlO0SDPny1JNqKKwuXJzkq2vd/eztycJERHndzQEMo4z79Se',3,true,'2023-12-29 00:00:00.000','2023-12-29 00:00:00.000'),
-	 ('Tom','Tom','a@a.com','$2a$12$DZxo4Pg/Y7xKjLuBzDuYXOCB2sAp5cWyZ6QXuRYt046QMUhWFrvcK',3,true,'2023-12-30 00:00:00.000','2023-12-30 00:00:00.000');
+sql("
+INSERT INTO public.users (user_firstname,user_lastname,user_email,user_password,user_access_level,user_verified,user_created_at,user_updated_at) VALUES
+	 ('Jan','Procházka','jan@prochazka.cz','$2a$12$2P.qt4LODWyMUtTxPAnSn.kvR0Pnro0bc9qOvny10EHgPDmxJMU0y',1,true,'2024-03-12 20:55:34.942','2024-03-12 20:55:34.942'),
+	 ('Pavel','Dvořák','pavel@dvorak.cz','$2a$12$hUCjyiLHuyba6mDLMS6sG.iso95i9P8UJ0AOkIc.LYpc/NfpezNj2',1,true,'2024-03-12 20:58:33.664','2024-03-12 20:58:33.664'),
+	 ('Kristýna','Jelínková','kristyna@jelinkova.cz','$2a$12$CiXPobnAu8gTOcl4qG0ClOOlLtz0C3GlvGWZ0fPFvwUYbnLG0z7Au',1,true,'2024-03-12 20:57:02.751','2024-03-12 20:57:02.751'),
+	 ('Jana','Horáková','jana@Horakova.cz','$2a$12$jw68KZPu9kzCr/swTdTUge3gVmgOa1vweHu4cSxINZW/gyUKgvV2S',1,true,'2024-03-12 20:55:54.658','2024-03-12 20:55:54.658'),
+	 ('Libuše','Nováková','libuse@novakova.cz','$2a$12$grPqUN2sfasGl3gLhNupGeC.IuezQGlehONCbtCEAn810PUAFBoSm',1,true,'2024-03-12 20:55:16.678','2024-03-12 20:55:16.678'),
+	 ('Jakub','Vrba','jakub@vrba.cz','$2a$12$NIOhm8OUWmH7Sz4uaKNSbua9yUrBhL7LoreBvzaW2Nh.Cy.PUKlZC',2,true,'2024-03-12 20:57:57.195','2024-03-12 20:57:57.195'),
+	 ('Petr','Svobodný','petr@svobodny.cz','$2a$12$rBjXouRNScG0QEWvhSQYYeImTZyVJ1ldggFZ.Jv4.FCyNfawX8Sl6',1,true,'2024-03-12 20:56:36.725','2024-03-12 20:56:36.725'),
+	 ('Martin','Svoboda','martin@svoboda.com','$2a$12$za6MVRPKsohGBCFrZYkDr.EPzY/C3B57HsOUUi7o1BM5hGvPVbr2a',1,true,'2024-03-12 20:56:13.510','2024-03-12 20:56:13.510'),
+	 ('Tereza','Nová','tereza@nova.com','$2a$12$nn/85v3IKqzP8ifQ.xh6tOeAhZ2uNHUxHp.lny/4QP5HN0vegTRqW',2,true,'2024-03-12 20:58:13.258','2024-03-12 20:58:13.258'),
+	 ('Lucie','Křížová','lucie@krizova.cz','$2a$12$DbM.b3ph8Cep9foCCqpsR.e4JtripiwtENz7S.aQXj089jJGnRPCm',2,true,'2024-03-12 20:57:31.743','2024-03-12 20:57:31.743');
+INSERT INTO public.users (user_firstname,user_lastname,user_email,user_password,user_access_level,user_verified,user_created_at,user_updated_at) VALUES
+	 ('Tomáš','Tomšů','tomas@tomsu.cz','$2a$12$DZxo4Pg/Y7xKjLuBzDuYXOCB2sAp5cWyZ6QXuRYt046QMUhWFrvcK',3,true,'2023-12-30 00:00:00.000','2023-12-30 00:00:00.000'),
+	 ('Admin','Admin','admin@admin.cz','$2a$12$d0W50qlO0SDPny1JNqKKwuXJzkq2vd/eztycJERHndzQEMo4z79Se',3,true,'2023-12-29 00:00:00.000','2024-03-12 20:58:54.241');
+
 ")
 
-sql("INSERT INTO public.events (event_header,event_body,event_author_id,event_created_at,event_updated_at) VALUES
-	 ('asd','asd',1,'2023-12-30 14:49:01.129','2023-12-30 14:49:01.129'),
-	 ('dfg','dfg',1,'2023-12-30 14:49:21.484','2023-12-30 14:49:21.484'),
-	 ('test','test',2,'2023-12-30 16:50:47.775','2023-12-30 16:50:47.775');
+
+sql("
+INSERT INTO public.events (event_header,event_body,event_author_id,event_created_at,event_updated_at) VALUES
+	 ('Letní sportovní den','Přijďte si užít sport a zábavu na našem letním sportovním dni 20. srpna. Čekají na vás turnaje ve fotbale, volejbale a dalších sportech.',1,'2024-03-12 21:00:35.278','2024-03-12 21:00:35.278'),
+	 ('Den otevřených dveří','Zveme všechny zájemce o studium u nás na Den otevřených dveří, který se koná 5. dubna. Přijďte se seznámit s našimi programy a prohlédnout si školní zařízení.',5,'2024-03-12 20:59:36.573','2024-03-12 20:59:36.573'),
+	 ('Vědecká konference','Přidejte se k nám na vědeckou konferenci zaměřenou na nové technologie ve vzdělávání, která se bude konat 20. dubna. Registrovat se můžete na webových stránkách školy.',6,'2024-03-12 20:59:45.517','2024-03-12 20:59:45.517'),
+	 ('Školní ples','Nezapomeňte, že 25. května se uskuteční náš výroční školní ples. Přijďte si užít skvělou hudbu, tanec a nezapomenutelné chvíle s přáteli.',7,'2024-03-12 20:59:55.926','2024-03-12 20:59:55.926'),
+	 ('Soutěž v programování','Vyzýváme všechny nadšené programátory, aby se zúčastnili naší soutěže v programování, která proběhne 10. června. Úžasné ceny čekají na vítěze!',8,'2024-03-12 21:00:05.689','2024-03-12 21:00:05.689'),
+	 ('Dobrovolnický den','Zapojte se do našeho dobrovolnického dne 5. července a pomozte nám zlepšit naše školní prostředí. Každá pomoc se počítá!',9,'2024-03-12 21:00:14.636','2024-03-12 21:00:14.636'),
+	 ('Workshop kreativního psaní','Máte rádi psaní$1 Přidejte se k našemu workshopu kreativního psaní 12. července a rozvíjejte svůj talent pod vedením zkušených lektorů.',10,'2024-03-12 21:00:25.913','2024-03-12 21:00:25.913'),
+	 ('Benefiční koncert','Podpořte dobrou věc a užijte si skvělou hudbu na našem benefičním koncertu 5. září. Výtěžek půjde na podporu místních charitativních organizací.',7,'2024-03-12 21:00:49.125','2024-03-12 21:00:49.125'),
+	 ('Večer poezie','Užijte si krásu slov na našem večeru poezie. 30. září, školní aula.',12,'2024-03-12 21:01:21.281','2024-03-12 21:01:21.281'),
+	 ('Večer poezie a výtvarného umění','Srdečně vás zveme na večer plný poezie a výtvarného umění, který se bude konat 30. září v školní aule. Tato kulturní noc je věnována prezentaci talentů našich studentů a učitelů v oblasti literatury a umění. Objevte s námi krásu veršů a barev, které vyjadřují emoce a příběhy z našeho života. Přijďte podpořit naše umělce a nechte se unést atmosférou večera plného inspirace.',10,'2024-03-12 21:02:07.693','2024-03-12 21:02:07.693');
+INSERT INTO public.events (event_header,event_body,event_author_id,event_created_at,event_updated_at) VALUES
+	 ('Školní bazar','S potěšením oznamujeme konání našeho prvního školního bazaru, který se bude konat 22. října. Bazar je skvělou příležitostí nejen pro nákup a prodej oblečení, knih, sportovního vybavení a dalších věcí, ale také pro setkání s přáteli a podporu dobré věci. Výtěžek z bazaru bude věnován na podporu lokálních charitativních projektů. Přijďte prodat, co již nepotřebujete, nebo najít skvosty, které oživí váš šatník či knihovnu.',5,'2024-03-12 21:03:34.111','2024-03-12 21:03:34.111'),
+	 ('Mezinárodní večer','V rámci oslav multikulturního ducha naší školy pořádáme Mezinárodní večer, který se uskuteční 15. října. Tato akce je příležitostí pro studenty a učitele z různých zemí sdílet kousky své kultury, jídla, hudby a tradic s ostatními. Připravte se na pestrý program plný tanečních vystoupení, kulinářských stánků a interaktivních workshopů, které vás zavedou do různých koutů světa. Mezinárodní večer je skvělou příležitostí pro všechny, kdo chtějí rozšířit své obzory a naučit se něco nového o různých kulturách, které společně tvoří naši školní komunitu.',6,'2024-03-12 21:00:05.689','2024-03-12 21:02:18.309'),
+	 ('Týden udržitelnosti a ekologie','Naše škola se rozhodla uspořádat Týden udržitelnosti a ekologie, který se bude konat od 3. do 7. října. Tento projekt má za cíl zvýšit povědomí o důležitosti udržitelného životního stylu a ekologických praktik v naší komunitě. Během týdne budou probíhat různé aktivity, včetně workshopů o recyklaci, přednášek o obnovitelných zdrojích energie a diskusí o dopadu naší každodenní činnosti na životní prostředí. Tento týden nabídne také praktické ukázky, jak můžeme snížit svou uhlíkovou stopu a žít vědoměji. Přidejte se k nám a buďte součástí změny!',2,'2024-03-12 21:00:14.636','2024-03-12 21:02:43.300'),
+	 ('Otevření nové knihovny','S radostí oznamujeme otevření naší zbrusu nové školní knihovny v pondělí 15. března! Přijďte prozkoumat naše rozšířené sbírky a zóny pro studium.',4,'2024-03-12 21:01:18.309','2024-03-12 20:59:24.386');
+
 ")
+

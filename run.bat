@@ -1,10 +1,13 @@
 @echo off
 SETLOCAL
 
+@REM Nutno zadat jméno databáse
 SET DBNAME=eventboarddb
+@REM Nutno zadat jméno - (default - postgres)
 SET DBUSER=postgres
-SET CACHE=false
-SET PRODUCTION=false
+SET CACHE=true
+SET PRODUCTION=true
+@REM Nutno zadat heslo
 SET DBPASS=tom
 SET DBPORT=5432
 

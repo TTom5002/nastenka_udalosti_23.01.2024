@@ -25,7 +25,14 @@ func (m *postgresDBRepo) ShowEvents(limit int, offset int) ([]models.Event, erro
 		LIMIT $1 offset $2
 	`
 
-	rows, err := m.DB.QueryContext(ctx, query, limit, offset)
+	var shift int
+	if (offset - 1) < 0 {
+		shift = 0
+	} else {
+		shift = ((offset - 1) * limit)
+	}
+
+	rows, err := m.DB.QueryContext(ctx, query, limit, shift)
 	if err != nil {
 		return events, err
 	}
@@ -111,17 +118,6 @@ func (m *postgresDBRepo) Authenticate(email, testPassword string) (models.User, 
 	return u, nil
 }
 
-// Query až budu chtít vybírat podle role
-/*
-select e.event_id, e.event_header, e.event_body, e.event_created_at, e.event_updated_at,
-		u.user_id, u.user_lastname
-		from events e
-		left join users u on (e.event_author_id = u.user_id)
-		where u.user_access_level = 3
-		order by e.event_created_at asc
-		LIMIT 5 offset 0
-*/
-
 func (m *postgresDBRepo) ShowUserEvents(id int) ([]models.Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -136,7 +132,7 @@ func (m *postgresDBRepo) ShowUserEvents(id int) ([]models.Event, error) {
 		left join users u on (e.event_author_id = u.user_id)
 		where u.user_id  = $1
 		order by e.event_created_at desc
-		LIMIT 25 offset 0
+		-- LIMIT 25 offset 0
 	`
 
 	rows, err := m.DB.QueryContext(ctx, query, id)
